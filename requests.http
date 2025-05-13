@@ -1,5 +1,16 @@
 ### Calculate Price
-POST http://127.0.0.1:8337/calculate-price
+POST http://127.0.0.1:8000/calculate-price
+Accept: application/json
+Content-Type: application/json
+
+{
+  "product": 1,
+  "taxNumber": "DE123456789",
+  "couponCode": "D100"
+}
+
+### Calculate Price with existed and wrong coupon
+POST http://127.0.0.1:8000/calculate-price
 Accept: application/json
 Content-Type: application/json
 
@@ -9,14 +20,87 @@ Content-Type: application/json
   "couponCode": "D15"
 }
 
-### Execute Purchase
-POST http://127.0.0.1:8337/purchase
+### Calculate Price without coupon
+POST http://127.0.0.1:8000/calculate-price
+Accept: application/json
+Content-Type: application/json
+
+{
+"product": 1,
+"taxNumber": "DE123456789"
+}
+
+### Calculate Price without fields
+POST http://127.0.0.1:8000/calculate-price
+Accept: application/json
+Content-Type: application/json
+
+{
+}
+
+### Execute Purchase with paypal success
+POST http://127.0.0.1:8000/purchase
+Accept: application/json
+Content-Type: application/json
+
+{
+  "product": 2,
+  "taxNumber": "IT12345678900",
+  "couponCode": "D15",
+  "paymentProcessor": "paypal"
+}
+
+### Execute Purchase with paypal error
+POST http://127.0.0.1:8000/purchase
+Accept: application/json
+Content-Type: application/json
+
+{
+  "product": 5,
+  "taxNumber": "IT12345678900",
+  "couponCode": "D15",
+  "paymentProcessor": "paypal"
+}
+
+### Execute Purchase with stripe error
+POST http://127.0.0.1:8000/purchase
+Accept: application/json
+Content-Type: application/json
+
+{
+  "product": 2,
+  "taxNumber": "IT12345678900",
+  "couponCode": "D15",
+  "paymentProcessor": "stripe"
+}
+
+### Execute Purchase with stripe success
+POST http://127.0.0.1:8000/purchase
 Accept: application/json
 Content-Type: application/json
 
 {
   "product": 1,
   "taxNumber": "IT12345678900",
+  "paymentProcessor": "stripe"
+}
+
+### Execute Purchase with wrong paymentProcessor
+POST http://127.0.0.1:8000/purchase
+Accept: application/json
+Content-Type: application/json
+
+{
+  "product": 2,
+  "taxNumber": "IT12345678900",
   "couponCode": "D15",
-  "paymentProcessor": "paypal"
+  "paymentProcessor": "paypal2"
+}
+
+### Execute Purchase without fields
+POST http://127.0.0.1:8000/purchase
+Accept: application/json
+Content-Type: application/json
+
+{
 }
