@@ -26,53 +26,36 @@ final class PurchaseController extends AbstractController
     #[Route('/calculate-price', methods: ['POST'])]
     public function calculatePrice(Request $request): JsonResponse
     {
-        try {
-            $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true);
 
-            $message = new CalculatePriceMessage($data);
-            $errors = $this->messageValidator->validate($message);
+        $totalPrice = $this->calculateProductPrice($data);
 
-            if (count($errors) > 0) {
-                return new JsonResponse(['errors' => $errors], 422);
-            }
-
-            $totalPrice = $this->handleMessage($message);
-
-            return new JsonResponse(['price' => $totalPrice]);
-        } catch (\Exception $e) {
-            return new JsonResponse(['error' => $e->getMessage()], 400);
-        }
+        return new JsonResponse(['price' => $totalPrice]);
     }
 
     #[Route('/purchase', methods: ['POST'])]
     public function purchase(Request $request): JsonResponse
     {
-        try {
-            $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true);
 
-            $message = new CalculatePriceMessage($data);
-            $errors = $this->messageValidator->validate($message);
+        $totalPrice = $this->calculateProductPrice($data);
 
-            if (count($errors) > 0) {
-                return new JsonResponse(['errors' => $errors], 422);
-            }
+        $message = new PurchaseMessage($data, $totalPrice);
 
-            $totalPrice = $this->handleMessage($message);
+        $this->messageValidator->validate($message);
 
-            $message = new PurchaseMessage($data, $totalPrice);
-            $errors = $this->messageValidator->validate($message);
+        $this->handleMessage($message);
 
-            if (count($errors) > 0) {
-                return new JsonResponse(['errors' => $errors], 422);
-            }
+        return new JsonResponse(['price' => $totalPrice], 200);
+    }
 
-            $this->handleMessage($message);
+    private function calculateProductPrice(?array $data)
+    {
+        $message = new CalculatePriceMessage($data);
 
-            return new JsonResponse(['price' => $totalPrice], 200);
+        $this->messageValidator->validate($message);
 
-        } catch (\Exception $e) {
-            return new JsonResponse(['error' => $e->getMessage()], 400);
-        }
+        return $this->handleMessage($message);
     }
 
     private function handleMessage($message)

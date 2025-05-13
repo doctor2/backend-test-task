@@ -2,6 +2,7 @@
 
 namespace App\Validator;
 
+use App\Exception\ValidationException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class MessageValidator
@@ -10,7 +11,7 @@ class MessageValidator
     {
     }
 
-    public function validate($message): array
+    public function validate($message): void
     {
         $errors = $this->validator->validate($message);
 
@@ -19,9 +20,8 @@ class MessageValidator
             foreach ($errors as $error) {
                 $errorMessages[] = $error->getMessage();
             }
-            return $errorMessages;
-        }
 
-        return [];
+            throw new ValidationException($errorMessages);
+        }
     }
 }
