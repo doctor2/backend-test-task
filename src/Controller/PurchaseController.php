@@ -68,7 +68,7 @@ final class PurchaseController extends AbstractController
 
             $this->handleMessage($message);
 
-            return new JsonResponse([], 200);
+            return new JsonResponse(['price' => $totalPrice], 200);
 
         } catch (\Exception $e) {
             return new JsonResponse(['error' => $e->getMessage()], 400);

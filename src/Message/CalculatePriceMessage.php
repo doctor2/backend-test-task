@@ -20,17 +20,17 @@ final class CalculatePriceMessage
     #[EntityExists(message:"Купон не найден", entityClass:Coupon::class, field:'code')]
     private ?string $couponCode = null;
 
-    public function __construct(array $data)
+    public function __construct(?array $data)
     {
-        if (isset($data['product'])) {
+        if ($data && isset($data['product'])) {
             $this->productId = $data['product'];
         }
 
-        if (isset($data['taxNumber'])) {
+        if ($data && isset($data['taxNumber'])) {
             $this->taxNumber = $data['taxNumber'];
         }
 
-        if (isset($data['couponCode'])) {
+        if ($data && isset($data['couponCode'])) {
             $this->couponCode = $data['couponCode'];
         }
     }

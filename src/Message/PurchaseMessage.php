@@ -12,11 +12,11 @@ final class PurchaseMessage
     #[Assert\NotBlank(message:"Неверный тип платежа")]
     private ?PaymentProcessor $paymentProcessor;
 
-    public function __construct(array $data, float $productPrice)
+    public function __construct(?array $data, float $productPrice)
     {
         $this->productPrice = $productPrice;
 
-        if (isset($data['paymentProcessor'])) {
+        if ($data && isset($data['paymentProcessor'])) {
             $this->paymentProcessor =  PaymentProcessor::tryFrom($data['paymentProcessor']);
         }
     }
