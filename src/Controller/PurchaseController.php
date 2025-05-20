@@ -11,24 +11,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
 
 final class PurchaseController extends AbstractController
 {
-    private MessageValidator $messageValidator;
-    private MessageBusInterface $bus;
-
-    public function __construct(MessageValidator $messageValidator, MessageBusInterface $bus)
-    {
-        $this->messageValidator = $messageValidator;
-        $this->bus = $bus;
-    }
+    public function __construct(private MessageValidator $messageValidator, private MessageBusInterface $bus,
+                                private SerializerInterface $serializer)
+    {}
 
     #[Route('/calculate-price', methods: ['POST'])]
     public function calculatePrice(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-
-        $totalPrice = $this->calculateProductPrice($data);
+        $totalPrice = $this->calculateProductPrice($request);
 
         return new JsonResponse(['price' => $totalPrice]);
     }
@@ -36,11 +31,12 @@ final class PurchaseController extends AbstractController
     #[Route('/purchase', methods: ['POST'])]
     public function purchase(Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $totalPrice = $this->calculateProductPrice($request);
 
-        $totalPrice = $this->calculateProductPrice($data);
-
-        $message = new PurchaseMessage($data, $totalPrice);
+        $message = $this->serializer->deserialize($request->getContent(), PurchaseMessage::class,'json', [
+            BackedEnumNormalizer::ALLOW_INVALID_VALUES => true,
+        ]);
+        $message->productPrice = $totalPrice;
 
         $this->messageValidator->validate($message);
 
@@ -49,9 +45,9 @@ final class PurchaseController extends AbstractController
         return new JsonResponse(['price' => $totalPrice], 200);
     }
 
-    private function calculateProductPrice(?array $data)
+    private function calculateProductPrice(Request $request)
     {
-        $message = new CalculatePriceMessage($data);
+        $message = $this->serializer->deserialize($request->getContent(), CalculatePriceMessage::class,'json');
 
         $this->messageValidator->validate($message);
 
