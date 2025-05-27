@@ -4,29 +4,29 @@ namespace App\Message\Handler;
 
 use App\Entity\Enum\PaymentProcessor;
 use App\Message\PurchaseMessage;
+use App\Service\PaypalPaymentGateway;
+use App\Service\StripePaymentGateway;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Systemeio\TestForCandidates\PaymentProcessor\PaypalPaymentProcessor;
-use Systemeio\TestForCandidates\PaymentProcessor\StripePaymentProcessor;
 
 #[AsMessageHandler]
 final class PurchaseMessageHandler
 {
-    public function __construct(private PaypalPaymentProcessor $paypalPaymentProcessor, private StripePaymentProcessor $stripePaymentProcessor)
+    public function __construct(private PaypalPaymentGateway $paypalPaymentGateway, private StripePaymentGateway $stripePaymentGateway)
     {
     }
 
     public function __invoke(PurchaseMessage $message): void
     {
-        $isPayed = true;
+        $isPayed = false;
 
         if ($message->getPaymentProcessor() === PaymentProcessor::PAYPAL) {
-            $this->paypalPaymentProcessor->pay($message->getProductPrice());
+            $isPayed = $this->paypalPaymentGateway->pay($message->getProductPrice());
         } elseif ($message->getPaymentProcessor() === PaymentProcessor::STRIPE) {
-            $isPayed = $this->stripePaymentProcessor->processPayment($message->getProductPrice());
+            $isPayed = $this->stripePaymentGateway->pay($message->getProductPrice());
         }
 
         if (!$isPayed){
-            throw new \Exception('Ошибка оплаты');
+            throw new \Exception('Ошибка оплаты: ' . $message->getPaymentProcessor()->value);
         }
     }
 }

@@ -17,9 +17,9 @@ class AppFixtures extends Fixture
         $coupon2 = CouponFactory::new(['discountValue' => '100', 'discountType' => DiscountType::PERCENT, 'code' => 'D100'])->create();
         CouponFactory::createMany(5);
 
-        ProductFactory::new(['name' => 'Iphone', 'price' => 100, 'coupon' => $coupon2])->create();
-        ProductFactory::new(['name' => 'Наушники', 'price' => 20, 'coupon' => $coupon1])->create();
-        ProductFactory::new(['name' => 'Чехол', 'price' => 10, 'coupon' => $coupon1])->create();
+        ProductFactory::new(['name' => 'Iphone', 'price' => 99900, 'coupon' => $coupon2])->create();
+        ProductFactory::new(['name' => 'Наушники', 'price' => 20000, 'coupon' => $coupon1])->create();
+        ProductFactory::new(['name' => 'Чехол', 'price' => 50, 'coupon' => $coupon1])->create();
         ProductFactory::createMany(5);
 
         TaxFactory::new(['taxNumber' =>'IT12345678900', 'rate' => 22])->create();

@@ -21,10 +21,10 @@ final class KernelExceptionListener
                 'errors' => $exception->getErrors()
             ], $exception->getCode());
         } else {
+            $statusCode = 500;
+
             if ($exception instanceof HttpExceptionInterface) {
                 $statusCode = $exception->getStatusCode();
-            } else {
-                $statusCode = 400;
             }
 
             $response = new JsonResponse([

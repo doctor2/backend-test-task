@@ -28,7 +28,7 @@ final class CalculatePriceMessageHandler
         return $priceWithDiscount + $tax;
     }
 
-    private function getProductPrice(int $productId)
+    private function getProductPrice(int $productId): int
     {
         $productRepository = $this->entityManager->getRepository(Product::class);
         $product = $productRepository->find($productId);
@@ -36,7 +36,7 @@ final class CalculatePriceMessageHandler
         return $product->getPrice();
     }
 
-    private function applyDiscount(?string $couponCode, int $productId, float $price): float
+    private function applyDiscount(?string $couponCode, int $productId, int $price): int
     {
         if (!$couponCode) {
             return 0;
@@ -48,17 +48,17 @@ final class CalculatePriceMessageHandler
         if ($coupon?->getDiscountType() === DiscountType::FIXED){
             return $coupon->getDiscountValue();
         } elseif ($coupon?->getDiscountType() === DiscountType::PERCENT) {
-            return $price * $coupon->getDiscountValue() / 100;
+            return (int) ($price * $coupon->getDiscountValue() / 100);
         }
 
         return 0;
     }
 
-    private function calculateTax(string $taxNumber, float $price): float
+    private function calculateTax(string $taxNumber, int $price): int
     {
         $taxRepository = $this->entityManager->getRepository(Tax::class);
         $tax = $taxRepository->findOneBy(['taxNumber' => $taxNumber]);
 
-        return $price * $tax->getRate() / 100;
+        return (int) ($price * $tax->getRate() / 100);
     }
 }

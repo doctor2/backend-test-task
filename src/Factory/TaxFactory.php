@@ -33,7 +33,7 @@ final class TaxFactory extends PersistentProxyObjectFactory
     {
         return [
             'name' => self::faker()->text(100),
-            'rate' => self::faker()->randomFloat(),
+            'rate' => self::faker()->randomNumber(2),
             'taxNumber' => self::faker()->text(20),
             'updatedAt' => self::faker()->dateTime(),
         ];

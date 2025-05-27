@@ -8,11 +8,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class PurchaseMessage
 {
     #[Assert\NotBlank(message:"Неверная цена")]
-    public ?float $productPrice;
+    public ?int $productPrice;
     #[Assert\NotBlank(message:"Неверный тип платежа")]
     public ?PaymentProcessor $paymentProcessor;
 
-    public function getProductPrice(): float
+    public function getProductPrice(): int
     {
         return $this->productPrice;
     }

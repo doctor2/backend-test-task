@@ -35,7 +35,7 @@ final class CouponFactory extends PersistentProxyObjectFactory
         return [
             'code' => self::faker()->text(50),
             'discountType' => self::faker()->randomElement(DiscountType::cases()),
-            'discountValue' => self::faker()->randomNumber(),
+            'discountValue' => self::faker()->randomNumber(2),
             'updatedAt' => self::faker()->dateTime(),
             'usedCount' => self::faker()->randomNumber(),
         ];

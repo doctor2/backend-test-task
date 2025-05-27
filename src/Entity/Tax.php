@@ -17,8 +17,8 @@ class Tax
     #[ORM\Column(type: 'string', length: 100)]
     private string $name;
 
-    #[ORM\Column(type: 'decimal', precision: 5, scale: 2)]
-    private string $rate;
+    #[ORM\Column(type: 'integer')]
+    private int $rate;
 
     #[ORM\Column(type: 'string', length: 20)]
     private string $taxNumber;
@@ -51,12 +51,12 @@ class Tax
         $this->name = $name;
     }
 
-    public function getRate(): string
+    public function getRate(): int
     {
         return $this->rate;
     }
 
-    public function setRate(string $rate): void
+    public function setRate(int $rate): void
     {
         $this->rate = $rate;
     }

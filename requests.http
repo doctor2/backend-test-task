@@ -56,7 +56,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "product": 5,
+  "product": 1,
   "taxNumber": "IT12345678900",
   "couponCode": "D15",
   "paymentProcessor": "paypal"
@@ -68,7 +68,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "product": 2,
+  "product": 3,
   "taxNumber": "IT12345678900",
   "couponCode": "D15",
   "paymentProcessor": "stripe"

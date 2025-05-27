@@ -10,4 +10,5 @@ compose.override.yaml
 /public/bundles/
 /var/
 /vendor/
+/storage/
 ###< symfony/framework-bundle ###

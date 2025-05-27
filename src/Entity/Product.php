@@ -17,8 +17,8 @@ class Product
     #[ORM\Column(type: 'string', length: 255)]
     private string $name;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private float $price;
+    #[ORM\Column(type: 'integer')]
+    private int $price;
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: true)]
@@ -30,7 +30,7 @@ class Product
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $updatedAt;
 
-    public function __construct(string $name, float $price)
+    public function __construct(string $name, int $price)
     {
         $this->name = $name;
         $this->price = $price;
@@ -56,12 +56,12 @@ class Product
         return $this;
     }
 
-    public function getPrice(): float
+    public function getPrice(): int
     {
         return $this->price;
     }
 
-    public function setPrice(float $price): self
+    public function setPrice(int $price): self
     {
         $this->price = $price;
         return $this;
