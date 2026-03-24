@@ -3,6 +3,7 @@
 namespace App\Message\Handler;
 
 use App\Entity\Enum\PaymentProcessor;
+use App\Exception\PaymentProcessorException;
 use App\Message\PurchaseMessage;
 use App\Service\PaypalPaymentGateway;
 use App\Service\StripePaymentGateway;
@@ -26,7 +27,7 @@ final class PurchaseMessageHandler
         }
 
         if (!$isPayed){
-            throw new \Exception('Ошибка оплаты: ' . $message->getPaymentProcessor()->value);
+            throw new PaymentProcessorException('Ошибка оплаты: ' . $message->getPaymentProcessor()->value);
         }
     }
 }

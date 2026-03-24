@@ -8,6 +8,7 @@ use App\Validator\MessageValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,7 +17,9 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 final class PurchaseController extends AbstractController
 {
-    public function __construct(private MessageValidator $messageValidator, private MessageBusInterface $bus,
+    use HandleTrait;
+
+    public function __construct(private MessageValidator $messageValidator, private MessageBusInterface $messageBus,
                                 private SerializerInterface $serializer)
     {}
 
@@ -40,7 +43,7 @@ final class PurchaseController extends AbstractController
 
         $this->messageValidator->validate($message);
 
-        $this->handleMessage($message);
+        $this->messageBus->dispatch($message);
 
         return new JsonResponse(['price' => $totalPrice], 200);
     }
@@ -51,13 +54,6 @@ final class PurchaseController extends AbstractController
 
         $this->messageValidator->validate($message);
 
-        return $this->handleMessage($message);
-    }
-
-    private function handleMessage($message)
-    {
-        $envelope = $this->bus->dispatch($message);
-        $handledStamp = $envelope->last(HandledStamp::class);
-        return $handledStamp->getResult();
+        return $this->handle($message);
     }
 }

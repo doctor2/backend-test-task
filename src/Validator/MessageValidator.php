@@ -2,7 +2,7 @@
 
 namespace App\Validator;
 
-use App\Exception\ValidationException;
+use App\Exception\InvalidDataException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class MessageValidator
@@ -21,7 +21,7 @@ class MessageValidator
                 $errorMessages[] = $error->getMessage();
             }
 
-            throw new ValidationException($errorMessages);
+            throw new InvalidDataException($errorMessages);
         }
     }
 }

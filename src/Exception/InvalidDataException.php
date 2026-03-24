@@ -4,7 +4,7 @@ namespace App\Exception;
 
 use \Exception;
 
-class ValidationException extends Exception
+class InvalidDataException extends Exception
 {
     private $errors;
 
